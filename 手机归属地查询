@@ -1,0 +1,128 @@
+<?php
+//http://www.lampbrother.net
+//兄弟连论坛
+    $link = mysql_connect('localhost','root','123456')or die("连接数据库失败！");//连接数据库
+    mysql_select_db('shoujiguishu')or die("选择数据库失败！");//选择数据库
+    mysql_set_charset('utf8');//设置字符集编码
+    $keyword = $_POST['keyword'];//得到用户提交的号码
+    $num = substr($keyword,0,7);//把号码截取成7位和数据库匹配
+    $sql = "SELECT num,quhao,city,type FROM shouji WHERE num = {$num}";//准备查询语句
+    $res = mysql_query($sql);//发送语句
+    if($res && mysql_num_rows($res)){//判断如果执行成功并且得到的结果数不为0
+        $card = mysql_fetch_assoc($res);//把结果集给变量$card 一个索引数组
+        $istrue = 1;//设置一个标志，用来判断是否查询成功
+    }else{
+        $msg = "请输入正确的手机号码！";//不成功，则返回一个提示信息
+        $istrue = 0;//不成功，标志为0
+    }
+    
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <title>Index</title>
+        <style>
+            *{
+                margin:0;
+                padding:0;
+            }
+            .main{
+                width:540px;
+                margin:0 auto;
+            }
+            .top{
+                width:540px;
+                height:63px;
+                background:url('./img/tit.png');
+            }
+            .tit{
+                color:#026EA3;
+http://www.lampbrother.net                font:normal bold 16px/63px serif;
+                text-indent:10px;
+            }
+            .search{
+                width:540px;
+                
+            }
+            .search_text{
+                width:260px;
+                height:31px;
+                margin-left:50px;
+                margin-top:30px;
+            }
+            .bun_sub{
+                width:80px;
+                height:31px;
+                background:url(./img/submit.gif);
+                border:0;
+            }
+            .bun_res{
+                width:80px;
+                height:31px;
+                background:url('./img/reset.gif');
+                border:0;
+
+            }
+            .bun{
+                width:170px;
+                float:left;
+                line-height:75px;
+            }
+            .sear{
+                width:350px;
+                float:left;
+            }
+            .content{
+                float:left;
+                width:538px;
+                border-left:1px solid #A9C9D0;
+                border-right:1px solid #A9C9D0;
+                border-bottom:1px solid #A9C9D0;
+            }
+            .result{
+                width:500px;
+                margin:0 auto;
+            }
+            p{
+                text-indent:30px;
+                font:normal normal 16px/35px serif;
+                color:#026EA3;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="main">
+            <div class="top">
+                <div class="tit">
+                    手机归属地查询
+                </div>
+            </div>
+            <div class="content">
+                <div class="search">
+                    <form action="" method="post">
+                        <div class="sear"><input type="text" class="search_text" name="keyword" /></div>
+                        <div class="bun"><input type="submit" class="bun_sub" name="sub" value="" />
+                        <input type="reset" class="bun_res" name="reset" value="" /></div>
+                    </form>    
+                </div>
+                <div class="result">
+                <?php
+                    if($istrue == 1){//判断标志为1时，说明查询成功，则执行下面代码
+                ?>
+                    <p>你查询的手机号码为:<?php echo $keyword ?></p>
+                    <p>所属的诚实为：<?php echo $card['city'] ?></p>
+                    <p>城市的区号为：<?php echo $card['quhao'] ?></p>
+                    <p>卡的类型为：<?php echo $card['type'] ?></p>
+                <?php
+                    }else{//否则查询不到则执行下面代码
+                        echo "<p>$msg</p>";
+                    }
+                ?>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+
